@@ -18,6 +18,7 @@
     <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/css/master.css" rel="stylesheet">
     <link href="assets/vendor/flagiconcss/css/flag-icon.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 
 <body>
@@ -202,9 +203,9 @@
                 <div class="row">
                    <form method="post">
                       <div class="col-sm-12">
-                          <h3 style="margin-top:2%">Vui long chon thang muon nhan bao cao ton</h3>
-                         <select class="form-select" name="select-month" id="month" required>
-                            <option selected>Choose...</option>
+                          <h3 style="margin-top:2%">Chọn tháng, năm: </h3>
+                         <select class="form-select" name="month" id="month" required>
+                            <option selected>Month...</option>
                             <option value="1">January</option>
                             <option value="2">February</option>
                             <option value="3">March</option>
@@ -218,12 +219,15 @@
                             <option value="11">November</option>
                             <option value="12">December</option>
                          </select>
+                         <div class="col-sm-10" style="margin-top:2%">
+                            <input type="number"  name="year" class="form-control" placeholder="Year...">
+                        </div>
                       </div>
                       <!-- <div class="col-sm-12">
                          <label for="message" class="form-label"><b>Message</b></label>
                          <input type="text" class="form-control" id="message" name="message" required>
                       </div> -->
-                      <button class="w-90 btn btn-primary btn-lg" type="submit" style="margin-top: 20px;">Submit</button>
+                      <button id="submit-form" class="w-90 btn btn-primary btn-lg" type="submit" style="margin-top: 20px;">Submit</button>
                    </form>
                 </div>
              </div>
@@ -253,11 +257,10 @@
 
             <div class="col-md-12 col-lg-12">
                 <div class="card">
-                    <div style="text-align: center; font-size: large; " class="card-header"><b>Bao Cao Ton</b></div>
-                    <div style="text-align: center; font-size: large; " class="card-header">Thang ....
-                    <br>
-                    Tong Doanh Thu
-                     </div>
+                    <div style="text-align: center; font-size: large; " class="card-header"><b>BÁO CÁO DOANH THU</b></div>
+                    <p style="text-align: center; font-size: large; " class="card-header" id="yearDiv"></p>
+                    <p style="text-align: center; font-size: large; " class="card-header" id="monthDiv"></p>
+                    <p style="text-align: center; font-size: large; " class="card-header" id="totalAmountDiv"></p>
                     <div class="card-body">
                         <p class="card-title"></p>
                         <div id="dataTables-example_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer"></div>
@@ -272,74 +275,17 @@
                             </div>
                         </div>
                         
-                        <table id="dataTables-example"  class="table table-bordered" width="80%">
+                        <table id="dataContainer"  class="table table-bordered" width="80%">
                             <thead>
                                 <tr>
                                     <th>STT</th>
-                                    <th>Hieu Xe</th>
-                                    <th>So Luot Sua</th>
-                                    <th>Thanh Tien</th>
-                                    <th>Ti Le</th>
+                                    <th>Hiệu xe</th>
+                                    <th>Số lượt sửa</th>
+                                    <th>Thành tiền</th>
+                                    <th>Tỉ lệ</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                    
                             </tbody>
                         </table>
                     </div>
@@ -352,6 +298,75 @@
     <script src="assets/vendor/chartsjs/Chart.min.js"></script>
     <script src="assets/js/dashboard-charts.js"></script>
     <script src="assets/js/script.js"></script>
+    <script>
+        let dataContainer = $('#dataContainer>tbody')
+        let input = document.querySelector('input[type="search"]')
+        let submitBtn = document.getElementById('submit-form')
+
+        submitBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            let yearValue = document.querySelector('input[name="year"]').value
+            let monthValue = document.querySelector('select[name="month"]').value
+
+            console.log(monthValue, yearValue)
+
+            axios.post('http://localhost:3000/salesreport',{
+                month: Number(monthValue),
+                year: Number(yearValue)
+            })
+            .then(function(response) {
+                console.log(response.data);
+                const year = response.data.Year
+                const month = response.data.Month
+                const totalAmount = response.data.TotalAmount
+                const detail = response.data.Detail
+
+                const monthDiv = document.getElementById('monthDiv')
+                const yearDiv = document.getElementById('yearDiv')
+                const totalAmountDiv = document.getElementById('totalAmountDiv')
+                
+                //totalReceivedDiv.setAttribute("style", "font-weight:bold")
+                monthDiv.innerHTML= "Tháng: " + month
+                yearDiv.innerHTML= "Năm: " + year
+                totalAmountDiv.innerHTML = "Tổng doanh thu: " + totalAmount
+
+
+                detail.map((value , i)=> {
+                    const node = document.createElement("tr")
+                    let dataNode = document.createElement("td")
+                    let data = document.createTextNode(i+1)
+                    dataNode.appendChild(data)
+                    node.append(dataNode)
+                    
+                    dataNode = document.createElement("td")
+                    data = document.createTextNode(value.Name)
+                    dataNode.appendChild(data)
+                    node.append(dataNode)
+
+                    dataNode = document.createElement("td")
+                    data = document.createTextNode(value.TotalAmount)
+                    dataNode.appendChild(data)
+                    node.append(dataNode)
+
+                    dataNode = document.createElement("td")
+                    data = document.createTextNode(value.TotalTimes)
+                    dataNode.appendChild(data)
+                    node.append(dataNode)
+
+                    dataNode = document.createElement("td")
+                    data = document.createTextNode(value.Ratio)
+                    dataNode.appendChild(data)
+                    node.append(dataNode)
+
+                    dataContainer.append(node)
+                })
+            })
+            .catch(function (error) {
+                //dataContainer.append('<p>App Crash</p>')
+                console.log(error);
+            })
+        })
+    </script>
 </body>
 
 </html>

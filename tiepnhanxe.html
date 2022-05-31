@@ -18,6 +18,7 @@
     <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/css/master.css" rel="stylesheet">
     <link href="assets/vendor/flagiconcss/css/flag-icon.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 
 <body>
@@ -57,10 +58,7 @@
                             <a href="danhsachcacxe.html"><i class="fas fa-receipt"></i>Danh Sach Cac Xe</a>
                         </li>
                         <li>
-                            <a href="signup.html"><i class="fas fa-user-plus"></i> Signup</a>
-                        </li>
-                        <li>
-                            <a href="forgot-password.html"><i class="fas fa-user-lock"></i> Forgot password</a>
+                            <a href="phieutiepnhan.html"><i class="fas fa-receipt"></i>Danh sách phiếu tiếp nhận</a>
                         </li>
                     </ul>
 
@@ -203,67 +201,74 @@
             <div class="content">
                 <div class= "container">
                     <div class="page-title">
-                        <h3>Tiep Nhan Xe Sua</h3>
+                        <h3>Tiếp nhận sửa chữa</h3>
                     </div>
                     <div class="col-lg-12">
                         <div class="card">
-                            <div class="card-header">BM1 : Lap Phieu Tiep Nhan Xe Sua</div>
+                            <div class="card-header">Lập phiếu tiếp nhận sửa chữa</div>
                             <div class="card-body">
                                 <h5 class="card-title"></h5>
-                                <form class="">
+                                <form class="" method="post" action="http://localhost:3000/carreceive">
                                     <div class="mb-3 row">
-                                        <label class="col-sm-2">Ten Chu Xe</label>
+                                        <label class="col-sm-2">Tên chủ xe</label>
                                         <div class="col-sm-10">
-                                            <input type="text" name="tenchuxe" class="form-control">
+                                            <input type="text" name="customerName" class="form-control">
                                         </div>
                                     </div>
                                     <div class="line"></div><br>
                                     <div class="mb-3 row">
-                                        <label class="col-sm-2">Bien So</label>
+                                        <label class="col-sm-2">Biển số</label>
                                         <div class="col-sm-10">
-                                            <input type="text" name="bienso" class="form-control">
+                                            <input type="text" name="licensePlate" class="form-control">
                                             <!-- <small class="form-text text-muted"></small> -->
                                         </div>
                                     </div>
                                     <div class="line"></div><br>
                                     <div class="mb-3 row">
-                                        <label class="col-sm-2">Hieu Xe</label>
+                                        <label class="col-sm-2">Hiệu xe</label>
                                         <div class="col-sm-10">
-                                            <input type="password" name="hieuxe" class="form-control">
+                                            <input type="text" name="brand" class="form-control">
                                         </div>
                                     </div>
                                     <div class="line"></div><br>
                                     <div class="mb-3 row">
-                                        <label class="col-sm-2">Dia Chi</label>
+                                        <label class="col-sm-2">Địa chỉ</label>
                                         <div class="col-sm-10">
-                                            <input type="text" name="diachi" class="form-control">
+                                            <input type="text" name="customerAddress" class="form-control">
                                         </div>
                                     </div>
                                     <div class="line"></div><br>
                                     <div class="mb-3 row">
-                                        <label class="col-sm-2">Dien Thoai</label>
+                                        <label class="col-sm-2">Điện thoại</label>
                                         <div class="col-sm-10">
-                                            <input type="text"  name="dienthoai" class="form-control" >
+                                            <input type="text"  name="customerPhoneNumber" class="form-control">
                                         </div>
                                     </div>
                                     <div class="line"></div><br>
-                                    <div class="mb-3 row">
-                                        <label class="col-sm-2">Ngay Tiep Nhan <br>
+                                    <!--<div class="mb-3 row">
+                                        <label class="col-sm-2">Ngày tiếp nhận <br>
                                     
                                         </label>
 
                                         <div class="col-sm-10">
                                             <div class="form-check">
                                           
-                                              <input type="text" name="ngaytiepnhan" class="form-control">
+                                              <input type="text" name="receivedDate" class="form-control" >
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="line"></div><br>
+                                    <div class="line"></div><br> -->
+                                    <div id="numberError">
+                                        <p style="color: red">Vượt quá số lượng nhận trong ngày.</p>
+                                    </div>
+                                    <div id="error">
+                                        <p style="color: red">Không thể tiếp nhận. Vui lòng kiểm tra lại thông tin.</p>
+                                    </div>
                                     <div class="mb-3 row">
                                         <div class="col-sm-4 offset-sm-2">
-                                            <button type="submit" class="btn btn-secondary mb-2"><i class="fas fa-times"></i> Cancel</button>
-                                            <button type="submit" class="btn btn-primary mb-2"><i class="fas fa-save"></i> Save</button>
+                                            
+                                            <button id="submit-form" type="submit" class="btn btn-primary mb-2"
+                                            ><i class="fas fa-save" ></i> Save</button>
                                         </div>
                                     </div>
                                 </form>
@@ -279,6 +284,37 @@
     <script src="assets/vendor/chartsjs/Chart.min.js"></script>
     <script src="assets/js/dashboard-charts.js"></script>
     <script src="assets/js/script.js"></script>
+    <script>
+        const submitBtn = document.getElementById('submit-form')
+        document.querySelector('#numberError').setAttribute('style', 'display: none')
+        document.querySelector('#error').setAttribute('style', 'display:none')
+
+        submitBtn.addEventListener('click', function(e){
+            document.querySelector('#numberError').setAttribute('style', 'display:none')
+            document.querySelector('#error').setAttribute('style', 'display:none')
+
+           e.preventDefault()
+
+           console.log(document.querySelector('input[name="licensePlate"]').value)
+           axios.post('http://localhost:3000/carreceive', {
+               customerName: document.querySelector('input[name="customerName"]').value,
+               licensePlate: document.querySelector('input[name="licensePlate"]').value,
+               brand: document.querySelector('input[name="brand"]').value,
+               customerAddress: document.querySelector('input[name="customerAddress"]').value,
+               customerPhoneNumber:  document.querySelector('input[name="customerPhoneNumber"]').value,
+           })
+           .then(function(response){
+               document.location.href="phieutiepnhan.html"
+           })
+           .catch(err => {
+                if(err.response.data.Error==1){
+                    document.querySelector('#numberError').setAttribute('style', 'display:inline')
+                }else{
+                    document.querySelector('#error').setAttribute('style', 'display:inline')
+                }
+           })
+        })
+    </script>
 </body>
 
 </html>
