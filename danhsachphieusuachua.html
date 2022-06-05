@@ -26,12 +26,12 @@
         <nav id="sidebar" class="active">
             <div class="sidebar-header">
                 <!--- <img src="assets/img/bootstraper-logo.png" alt="bootraper logo" class="app-logo"> --->
-                <h1 style="color: black;">Danh mục</h1>
+                <h1 style="color: black;">Menu</h1>
             </div>
     
             <ul class="list-unstyled components text-secondary">
                 <li>
-                    <a href="dashboard.html"><i class="fas fa-home"></i> Trang chủ</a>
+                    <a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a>
                 </li>
                <!-- <li>
                     <a href="forms.html"><i class="fas fa-file-alt"></i> Forms</a>
@@ -173,6 +173,7 @@
                     <ul class="nav navbar-nav ms-auto">
                         <li class="nav-item dropdown">
                             <div class="nav-dropdown">
+                            
                                 <div class="dropdown-menu dropdown-menu-end nav-link-menu" aria-labelledby="nav1">
                                     <ul class="nav-list">
                                         <li><a href="" class="dropdown-item"><i class="fas fa-list"></i> Access Logs</a></li>
@@ -181,7 +182,7 @@
                                         <div class="dropdown-divider"></div>
                                         <li><a href="" class="dropdown-item"><i class="fas fa-cloud-download-alt"></i> Updates</a></li>
                                         <div class="dropdown-divider"></div>
-                                        <li><a href="signup.html" class="dropdown-item"><i class="fas fa-user-shield"></i> Roles</a></li>
+                                        <li><a href="" class="dropdown-item"><i class="fas fa-user-shield"></i> Roles</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -189,7 +190,7 @@
                         <li class="nav-item dropdown">
                             <div class="nav-dropdown">
                                 <a href="#" id="nav2" class="nav-item nav-link dropdown-toggle text-secondary" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fas fa-user"></i> <span>Admin</span> <i style="font-size: .8em;" class="fas fa-caret-down"></i>
+                                    <i class="fas fa-user"></i> <span>John Doe</span> <i style="font-size: .8em;" class="fas fa-caret-down"></i>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end nav-link-menu">
                                     <ul class="nav-list">
@@ -197,7 +198,7 @@
                                         <li><a href="" class="dropdown-item"><i class="fas fa-envelope"></i> Messages</a></li>
                                         <li><a href="" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a></li>
                                         <div class="dropdown-divider"></div>
-                                        <li><a href="" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                                        <li><a href="signup.html" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -209,43 +210,60 @@
 
              <div class="col-md-12 col-lg-12">
                 <div class="card">
-                    <div class="card-header"style="font-weight:bold">DANH SÁCH XE</div>
+                    <div class="card-header"style="font-weight:bold">DANH SÁCH PHIẾU SỬA CHỮA </div>
                     <div class="card-body">
                         <p class="card-title"></p>
                         <div id="dataTables-example_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer"></div>
                         <div class="row">
-                            <div class="col-sm-12 col-md-12"></div>
-                            <div class="col-sm-12 col-md-12">
-                                <div id="dataTables-example_filter" class="dataTables_filter mb-2">
-                                    <label>
-                                        <input type="search" id="searchByLicense" name="license" class="form-control form-control-sm" placeholder="Biển số xe">
+                            
+                            <div class="col-sm-12 col-md-6">
+                                <div id="dataTables-example_filter" class="dataTables_filter">
+                                    <label> Nhập biển số xe: 
+                                        <input type="search" id="searchByLicense" name="bienso" class="form-control form-control-sm" placeholder-aria-controls="dataTables-example">
+                                        <br>
+                                        <button id="searchBtn" type="submit" class="btn btn-primary mb-2"> Tìm</button>
                                     </label>
+                                    <br>
+                                    <a href="lapphieuthutien.html">
+                                        <button id="createNew" type="submit" class="btn btn-primary mb-2"> Tạo mới phiếu sửa chữa</button>
+                                    </a>
+            
                                 </div>
-                                <button id="searchbtn" type="submit" class="btn btn-primary mt-2"><i class="fas fa-save" ></i> Tìm</button>
                             </div>
-                            <br>
-                            <div id="totalCars" class="col-sm-12 col-md-12 margin-top-6"></div>
+                            <div id="totalReceipts" class="col-sm-12 col-md-12 margin-top-6"></div>
                         </div>
-                        
 
-                        <div style="overflow-y: scroll; height: 600px;">
-                            <table class="table table-hover" id="dataContainer" width="100%">
+                        <div id="searchDiv" style="overflow-y: scroll; height: 400px;">
+                            <table id="searchTable" class="table table-hover" width="100%">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Biển số</th>
-                                        <th>Tiền nợ</th>
-                                        <th>Khách hàng</th>
-                                        <th>Hiệu xe</th>
-                                        <th>Phiếu thu tiền</th>
-                                        <th>Phiếu sữa chữa</th>
+                                        <th>Biển số xe</th>
+                                        <th>Tổng tiền sửa chữa</th>
+                                        <th>Thời gian sửa chữa</th>
+                                        <th>Xóa</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 </tbody>
                             </table>
                         </div>
-                        
+
+                        <div style="overflow-y: scroll; height: 400px;" id="dataContainerDiv">
+                            <table class="table table-hover" id="dataContainer" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Biển số xe</th>
+                                        <th>Tổng tiền sửa chữa</th>
+                                        <th>Thời gian sửa chữa</th>
+                                        <th>Xóa</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -258,22 +276,81 @@
     <script src="assets/js/script.js"></script>
     <script>
 
-        let dataContainer = $('#dataContainer>tbody')
-        let searchInput = document.querySelector('input[type="search"]')
-        let searchBtn = document.getElementById('searchbtn')
-        let totalDiv = document.getElementById('totalCars')
+        let dataContainer = document.querySelector('#dataContainer>tbody')
+        let searchTable = document.querySelector('#searchTable>tbody')
+        let totalDiv = document.getElementById('totalReceipts')
+        let searchBtn = document.getElementById('searchBtn')
 
-        // Show car list
-        axios.get('http://localhost:3000/car')
-        .then(function (response) {
-         console.log(response.data);
-            const total = response.data.Total
-            const carData = response.data.Cars
 
-            totalDiv.setAttribute("style", "font-weight:bold")
-            totalDiv.innerHTML = "Tổng cộng: " + total
+        document.querySelector('#searchDiv').setAttribute('style', 'display: none')
 
-            carData.map((value , i)=> {
+        // Show receipts list
+        axios.get('http://localhost:3000/repair/alldetail')
+            .then((response)=>{
+                console.log(response)
+                
+                const total = response.data.Total
+                const repairInfo = response.data.RepairInfo
+
+                totalDiv.setAttribute("style", "font-weight:bold")
+                totalDiv.innerHTML = "Tổng cộng: " + total
+
+                repairInfo.map((value , i)=> {
+                    const node = document.createElement("tr")
+                    let dataNode = document.createElement("td")
+                    let data = document.createTextNode(i+1)
+                    dataNode.appendChild(data)
+                    node.append(dataNode)
+                
+                    dataNode = document.createElement("td")
+                    data = document.createTextNode(value.repairInfo.CAR.LicensePlate)
+                    dataNode.appendChild(data)
+                    node.append(dataNode)
+
+                    dataNode = document.createElement("td")
+                    data = document.createTextNode(value.repairInfo.Amount)
+                    dataNode.appendChild(data)
+                    node.append(dataNode)
+
+                    dataNode = document.createElement("td")
+                    data = document.createTextNode(value.repairInfo.Date)
+                    dataNode.appendChild(data)
+                    node.append(dataNode)
+
+                    dataNode = document.createElement("td")
+                btnNode = document.createElement("button")
+                data = document.createTextNode("Xóa")
+                btnNode.append(data)
+                btnNode.setAttribute("class", "btn btn-danger")
+                dataNode.append(btnNode)
+                node.append(dataNode)
+
+
+                    dataContainer.append(node)
+                })
+
+            })
+        
+
+
+        // SEARCH 
+        searchBtn.addEventListener('click', function(e){
+           e.preventDefault()
+           axios.post('http://localhost:3000/moneycollection/search', {
+               bienso: document.querySelector('input[name="bienso"]').value
+           })
+           .then(function(response){
+               document.querySelector('#dataContainerDiv').setAttribute('style', 'display: none')
+               document.querySelector('#searchDiv').setAttribute('style', 'display: block; overflow-y: scroll; height: 400px;')
+
+               $('#searchTable>tbody>tr').remove()
+
+                const total = response.data.Total
+                const receipts = response.data.Receipts
+
+                totalDiv.innerHTML = "Tổng cộng: " + total
+
+               receipts.map((value , i)=> {
                 const node = document.createElement("tr")
                 let dataNode = document.createElement("td")
                 let data = document.createTextNode(i+1)
@@ -281,147 +358,38 @@
                 node.append(dataNode)
                 
                 dataNode = document.createElement("td")
-                data = document.createTextNode(value.LicensePlate)
+                data = document.createTextNode(value.CAR.CUSTOMER.Name)
                 dataNode.appendChild(data)
                 node.append(dataNode)
 
                 dataNode = document.createElement("td")
-                data = document.createTextNode(value.Debt)
+                data = document.createTextNode(value.CAR.LicensePlate)
                 dataNode.appendChild(data)
                 node.append(dataNode)
 
                 dataNode = document.createElement("td")
-                data = document.createTextNode(value.CUSTOMER.Name)
+                data = document.createTextNode(value.Amount)
                 dataNode.appendChild(data)
                 node.append(dataNode)
 
                 dataNode = document.createElement("td")
-                data = document.createTextNode(value.BRAND.Name)
+                data = document.createTextNode(value.Date)
                 dataNode.appendChild(data)
                 node.append(dataNode)
 
                 dataNode = document.createElement("td")
                 btnNode = document.createElement("button")
-                data = document.createTextNode("Tạo phiếu thu tiền ")
+                data = document.createTextNode("Xóa")
                 btnNode.append(data)
-                btnNode.setAttribute("class", "btn btn-success mb-2")
-                brNode = document.createElement("br")
-                dataNode.append(btnNode)
-                dataNode.append(brNode)
-                btnNode = document.createElement("button")
-                data = document.createTextNode("Xem phiếu thu tiền")
-                btnNode.append(data)
-                btnNode.setAttribute("class", "btn btn-primary")
+                btnNode.setAttribute("class", "btn btn-danger")
                 dataNode.append(btnNode)
                 node.append(dataNode)
 
-                dataNode = document.createElement("td")
-                btnNode = document.createElement("button")
-                data = document.createTextNode("Tạo phiếu sữa chữa ")
-                btnNode.append(data)
-                btnNode.setAttribute("class", "btn btn-success mb-2")
-                brNode = document.createElement("br")
-                dataNode.append(btnNode)
-                dataNode.append(brNode)
-                btnNode = document.createElement("button")
-                data = document.createTextNode("Xem phiếu sữa chữa")
-                btnNode.append(data)
-                btnNode.setAttribute("class", "btn btn-primary")
-                dataNode.append(btnNode)
-                node.append(dataNode)
-
-                dataContainer.append(node)
-            })
-        })
-        .catch(function (error) {
-                //dataContainer.append('<p>App Crash</p>')
-                console.log(error);
+                searchTable.append(node)
+           })
         })
         
-        // SEARCH CAR
-        searchBtn.addEventListener('click',function(e) {
-            
-            console.log(searchInput.value)
-            axios.post("http://localhost:3000/car/search",{
-                license: searchInput.value
-            })
-            .then(function(response){
-                let value = response.data
-
-                $('#dataContainer>tbody>tr').remove()
-                totalDiv.innerHTML = "Total: "
-
-                let node = document.createElement("tr")
-                let dataNode = document.createElement("td")
-                let data = document.createTextNode(" ")
-                dataContainer.prepend(node)
-
-                node = document.createElement("tr")
-                dataNode = document.createElement("td")
-                data = document.createTextNode(" ")
-                dataNode.appendChild(data)
-                node.append(dataNode)
-
-                dataNode = document.createElement("td")
-                data = document.createTextNode(value.LicensePlate)
-                dataNode.appendChild(data)
-                node.append(dataNode)
-
-                dataNode = document.createElement("td")
-                data = document.createTextNode(value.Debt)
-                dataNode.appendChild(data)
-                node.append(dataNode)
-
-                dataNode = document.createElement("td")
-                data = document.createTextNode(value.CUSTOMER.Name)
-                dataNode.appendChild(data)
-                node.append(dataNode)
-
-                dataNode = document.createElement("td")
-                data = document.createTextNode(value.BRAND.Name)
-                dataNode.appendChild(data)
-                node.append(dataNode)
-
-                dataNode = document.createElement("td")
-                btnNode = document.createElement("button")
-                data = document.createTextNode("Tạo phiếu thu tiền ")
-                btnNode.append(data)
-                btnNode.setAttribute("class", "btn btn-success")
-                brNode = document.createElement("br")
-                dataNode.append(btnNode)
-                dataNode.append(brNode)
-                btnNode = document.createElement("button")
-                data = document.createTextNode("Xem phiếu thu tiền")
-                btnNode.append(data)
-                btnNode.setAttribute("class", "btn btn-primary")
-                dataNode.append(btnNode)
-                node.append(dataNode)
-
-                dataNode = document.createElement("td")
-                btnNode = document.createElement("button")
-                data = document.createTextNode("Tạo phiếu sữa chữa ")
-                btnNode.append(data)
-                btnNode.setAttribute("class", "btn btn-success")
-                brNode = document.createElement("br")
-                dataNode.append(btnNode)
-                dataNode.append(brNode)
-                btnNode = document.createElement("button")
-                data = document.createTextNode("Xem phiếu sữa chữa")
-                btnNode.append(data)
-                btnNode.setAttribute("class", "btn btn-primary")
-                dataNode.append(btnNode)
-                node.append(dataNode)
-
-                dataContainer.prepend(node)
-
-            }).catch(function (error) {
-                //dataContainer.append('<p>App Crash</p>')
-                console.log(error);
         })
-
-        })
-        
-
     </script>
 </body>
 

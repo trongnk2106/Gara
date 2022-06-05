@@ -18,6 +18,7 @@
     <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/css/master.css" rel="stylesheet">
     <link href="assets/vendor/flagiconcss/css/flag-icon.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 
@@ -207,46 +208,93 @@
             </nav>
             <!-- end of navbar navigation -->
 
-             <div class="col-md-12 col-lg-12">
-                <div class="card">
-                    <div class="card-header"style="font-weight:bold">DANH SÁCH XE</div>
-                    <div class="card-body">
-                        <p class="card-title"></p>
-                        <div id="dataTables-example_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer"></div>
-                        <div class="row">
-                            <div class="col-sm-12 col-md-12"></div>
-                            <div class="col-sm-12 col-md-12">
-                                <div id="dataTables-example_filter" class="dataTables_filter mb-2">
-                                    <label>
-                                        <input type="search" id="searchByLicense" name="license" class="form-control form-control-sm" placeholder="Biển số xe">
-                                    </label>
-                                </div>
-                                <button id="searchbtn" type="submit" class="btn btn-primary mt-2"><i class="fas fa-save" ></i> Tìm</button>
-                            </div>
-                            <br>
-                            <div id="totalCars" class="col-sm-12 col-md-12 margin-top-6"></div>
-                        </div>
-                        
-
-                        <div style="overflow-y: scroll; height: 600px;">
-                            <table class="table table-hover" id="dataContainer" width="100%">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Biển số</th>
-                                        <th>Tiền nợ</th>
-                                        <th>Khách hàng</th>
-                                        <th>Hiệu xe</th>
-                                        <th>Phiếu thu tiền</th>
-                                        <th>Phiếu sữa chữa</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                        
+            <div class="content">
+                <div class= "container">
+                    <div class="page-title">
+                        <h3>Báo cáo tồn</h3>
                     </div>
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header">Tạo báo cáo tồn</div>
+                            <div class="card-body">
+                                <h5 class="card-title"></h5>
+
+
+                                <form class="">
+                                    <div class="mb-3 row">
+                                        <label class="col-sm-2">Năm</label>
+                                        <div class="col-sm-10">
+                                            <input type="number" name="year" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="line"></div><br>
+                                    <div class="mb-3 row">
+                                        <label class="col-sm-2">Tháng</label>
+                                        <div class="col-sm-10">
+                                            <input type="number" name="month" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="line"></div><br>
+                                    <p class="col-sm-2">Số lượng tồn đầu tháng</p>
+                                    <div class="mb-3 row" id="quantity" >
+                                        
+                                    </div>
+                                    <div class="line"></div><br>
+                                    <div id="dataError">
+                                        <p style="color: red">Thêm năm/ tháng/ số lượng đầu tháng</p>
+                                    </div>
+                                    <div id="requestError">
+                                        <p style="color: red">Không thể thêm báo cáo tồn. Vui lòng kiểm tra lại thông tin.</p>
+                                    </div>
+                                    <div id="existedError">
+                                        <p style="color: red">Báo cáo đã tồn tại.</p>
+                                    </div>
+                                    <div id="requestOK">
+                                        <p style="color: green">Thêm thành công</p>
+                                    </div>
+        
+                                    <div class="mb-3 row">
+                                        <div class="col-sm-4 offset-sm-2">
+                                    
+                                            <button id="submitBtn" type="submit" class="btn btn-primary mb-2"><i class="fas fa-save"></i> Thêm</button>
+                                        </div>
+                                    </div>
+                                </form>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-header">Thông tin báo cáo</div>
+                            <div class="card-body">
+                                <p class="card-title"></p>
+                                <div id="dataTables-example_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer"></div>
+                                <table class="table table-hover" id="dataContainer" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Vật tư phụ tùng</th>
+                                            <th>Số lượng đầu tháng</th>
+                                            <th>Số lượng nhập</th>
+                                            <th>Số lượng đã sử dụng</th>
+                                            <th>Phát sinh</th>
+                                            <th>Số lượng cuối tháng</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
                 </div>
             </div>
         </div>
@@ -257,172 +305,142 @@
     <script src="assets/js/dashboard-charts.js"></script>
     <script src="assets/js/script.js"></script>
     <script>
+       const submitBtn = document.getElementById('submitBtn')
+       const dataContainer =  document.querySelector('#dataContainer>tbody')
+       document.querySelector('#dataError').setAttribute('style', 'display: none')
+       document.querySelector('#requestError').setAttribute('style', 'display: none')
+       document.querySelector('#requestOK').setAttribute('style', 'display: none')
+       document.querySelector('#existedError').setAttribute('style', 'display: none')
 
-        let dataContainer = $('#dataContainer>tbody')
-        let searchInput = document.querySelector('input[type="search"]')
-        let searchBtn = document.getElementById('searchbtn')
-        let totalDiv = document.getElementById('totalCars')
-
-        // Show car list
-        axios.get('http://localhost:3000/car')
-        .then(function (response) {
-         console.log(response.data);
-            const total = response.data.Total
-            const carData = response.data.Cars
-
-            totalDiv.setAttribute("style", "font-weight:bold")
-            totalDiv.innerHTML = "Tổng cộng: " + total
-
-            carData.map((value , i)=> {
-                const node = document.createElement("tr")
-                let dataNode = document.createElement("td")
-                let data = document.createTextNode(i+1)
+       document.querySelector('#dataContainer').setAttribute('style', 'display:none')
+        
+       // GET ALL ACCESSORIES
+       let accessoriesQuantity 
+       const insertQuantityDiv = document.querySelector('div[id="quantity"]')
+       console.log(insertQuantityDiv)
+        axios.get('http://localhost:3000/accessories')
+        .then((response)=>{
+            let accessories = response.data.Accessories
+            accessoriesQuantity = response.data.Total
+            accessories.map((value, i) => {
+                dataNode = document.createElement("label")
+                data = document.createTextNode( value.Name)
                 dataNode.appendChild(data)
-                node.append(dataNode)
+                dataNode.setAttribute('class', 'col-sm-2')
+                insertQuantityDiv.append(dataNode)
+
+                dataNode = document.createElement('div')
+                dataNode.setAttribute('class', 'col-sm-10')
+
+                dataNodeInput = document.createElement('input')
+                dataNodeInput.setAttribute('id', i)
+                dataNodeInput.setAttribute('type', 'number')
+                dataNodeInput.setAttribute('class', 'form-control')
+
+                dataNodeLine = document.createElement('div')
+                dataNodeLine.setAttribute('class', 'line')
                 
-                dataNode = document.createElement("td")
-                data = document.createTextNode(value.LicensePlate)
-                dataNode.appendChild(data)
-                node.append(dataNode)
-
-                dataNode = document.createElement("td")
-                data = document.createTextNode(value.Debt)
-                dataNode.appendChild(data)
-                node.append(dataNode)
-
-                dataNode = document.createElement("td")
-                data = document.createTextNode(value.CUSTOMER.Name)
-                dataNode.appendChild(data)
-                node.append(dataNode)
-
-                dataNode = document.createElement("td")
-                data = document.createTextNode(value.BRAND.Name)
-                dataNode.appendChild(data)
-                node.append(dataNode)
-
-                dataNode = document.createElement("td")
-                btnNode = document.createElement("button")
-                data = document.createTextNode("Tạo phiếu thu tiền ")
-                btnNode.append(data)
-                btnNode.setAttribute("class", "btn btn-success mb-2")
-                brNode = document.createElement("br")
-                dataNode.append(btnNode)
-                dataNode.append(brNode)
-                btnNode = document.createElement("button")
-                data = document.createTextNode("Xem phiếu thu tiền")
-                btnNode.append(data)
-                btnNode.setAttribute("class", "btn btn-primary")
-                dataNode.append(btnNode)
-                node.append(dataNode)
-
-                dataNode = document.createElement("td")
-                btnNode = document.createElement("button")
-                data = document.createTextNode("Tạo phiếu sữa chữa ")
-                btnNode.append(data)
-                btnNode.setAttribute("class", "btn btn-success mb-2")
-                brNode = document.createElement("br")
-                dataNode.append(btnNode)
-                dataNode.append(brNode)
-                btnNode = document.createElement("button")
-                data = document.createTextNode("Xem phiếu sữa chữa")
-                btnNode.append(data)
-                btnNode.setAttribute("class", "btn btn-primary")
-                dataNode.append(btnNode)
-                node.append(dataNode)
-
-                dataContainer.append(node)
+                dataNodeBr = document.createElement('br')
+                dataNode.append(dataNodeInput)
+                insertQuantityDiv.append(dataNode)
+                insertQuantityDiv.append(dataNodeLine)
+                insertQuantityDiv.append(dataNodeBr)
             })
         })
-        .catch(function (error) {
-                //dataContainer.append('<p>App Crash</p>')
-                console.log(error);
+        .catch(err => {
+            console.log(err)
         })
         
-        // SEARCH CAR
-        searchBtn.addEventListener('click',function(e) {
-            
-            console.log(searchInput.value)
-            axios.post("http://localhost:3000/car/search",{
-                license: searchInput.value
-            })
-            .then(function(response){
-                let value = response.data
 
+
+
+       // SUBMIT FORM
+       submitBtn.addEventListener('click', function(e){
+            document.querySelector('#requestError').setAttribute('style', 'display: none')
+            e.preventDefault()
+            let quantityArr = []
+            for(let i=0; i< accessoriesQuantity; i++){
+                let quantity = document.getElementById(i).value
+                quantityArr.push(quantity)
+            }
+
+            axios.post('http://localhost:3000/inventory', {
+               month: document.querySelector('input[name="month"]').value,
+               year: document.querySelector('input[name="year"]').value,
+               initialQuantity: quantityArr
+            })
+           .then(function(response){
+               document.querySelector('#dataContainer').setAttribute('style', 'display:table')
+               console.log(response)
+               const inventory = response.data.Reports
+               const name = response.data.Name
+               
+               $('#dataContainer>tbody>tr').remove()
+
+                document.querySelector('#dataError').setAttribute('style', 'display: none')
+                document.querySelector('#requestError').setAttribute('style', 'display: none')
+                document.querySelector('#requestOK').setAttribute('style', 'display: block')
+                document.querySelector('#existedError').setAttribute('style', 'display: none')
+
+                inventory.map((value, i)=>{
+                    const node = document.createElement("tr")
+                    
+                    let dataNode = document.createElement("td")
+                    let data = document.createTextNode(i+1)
+                    dataNode.appendChild(data)
+                    node.append(dataNode)
+
+                    dataNode = document.createElement("td")
+                    data = document.createTextNode(name[i])
+                    dataNode.appendChild(data)
+                    node.append(dataNode)
+
+                    dataNode = document.createElement("td")
+                    data = document.createTextNode(value.InitialQuantity)
+                    dataNode.appendChild(data)
+                    node.append(dataNode)
+
+                    dataNode = document.createElement("td")
+                    data = document.createTextNode(value.ImportedQuantity)
+                    dataNode.appendChild(data)
+                    node.append(dataNode)
+
+                    dataNode = document.createElement("td")
+                    data = document.createTextNode(value.UsedQuantity)
+                    dataNode.appendChild(data)
+                    node.append(dataNode)
+
+                    dataNode = document.createElement("td")
+                    data = document.createTextNode(value.Arising)
+                    dataNode.appendChild(data)
+                    node.append(dataNode)
+
+                    dataNode = document.createElement("td")
+                    data = document.createTextNode(value.FinalQuantity)
+                    dataNode.appendChild(data)
+                    node.append(dataNode)
+
+                    dataContainer.append(node)
+                })  
+            })
+            .catch(err => {
+                console.log(err)
                 $('#dataContainer>tbody>tr').remove()
-                totalDiv.innerHTML = "Total: "
+                document.querySelector('#dataError').setAttribute('style', 'display: none')
+                document.querySelector('#requestError').setAttribute('style', 'display: none')
+                document.querySelector('#requestOK').setAttribute('style', 'display: none')
+                document.querySelector('#existedError').setAttribute('style', 'display: none')
 
-                let node = document.createElement("tr")
-                let dataNode = document.createElement("td")
-                let data = document.createTextNode(" ")
-                dataContainer.prepend(node)
-
-                node = document.createElement("tr")
-                dataNode = document.createElement("td")
-                data = document.createTextNode(" ")
-                dataNode.appendChild(data)
-                node.append(dataNode)
-
-                dataNode = document.createElement("td")
-                data = document.createTextNode(value.LicensePlate)
-                dataNode.appendChild(data)
-                node.append(dataNode)
-
-                dataNode = document.createElement("td")
-                data = document.createTextNode(value.Debt)
-                dataNode.appendChild(data)
-                node.append(dataNode)
-
-                dataNode = document.createElement("td")
-                data = document.createTextNode(value.CUSTOMER.Name)
-                dataNode.appendChild(data)
-                node.append(dataNode)
-
-                dataNode = document.createElement("td")
-                data = document.createTextNode(value.BRAND.Name)
-                dataNode.appendChild(data)
-                node.append(dataNode)
-
-                dataNode = document.createElement("td")
-                btnNode = document.createElement("button")
-                data = document.createTextNode("Tạo phiếu thu tiền ")
-                btnNode.append(data)
-                btnNode.setAttribute("class", "btn btn-success")
-                brNode = document.createElement("br")
-                dataNode.append(btnNode)
-                dataNode.append(brNode)
-                btnNode = document.createElement("button")
-                data = document.createTextNode("Xem phiếu thu tiền")
-                btnNode.append(data)
-                btnNode.setAttribute("class", "btn btn-primary")
-                dataNode.append(btnNode)
-                node.append(dataNode)
-
-                dataNode = document.createElement("td")
-                btnNode = document.createElement("button")
-                data = document.createTextNode("Tạo phiếu sữa chữa ")
-                btnNode.append(data)
-                btnNode.setAttribute("class", "btn btn-success")
-                brNode = document.createElement("br")
-                dataNode.append(btnNode)
-                dataNode.append(brNode)
-                btnNode = document.createElement("button")
-                data = document.createTextNode("Xem phiếu sữa chữa")
-                btnNode.append(data)
-                btnNode.setAttribute("class", "btn btn-primary")
-                dataNode.append(btnNode)
-                node.append(dataNode)
-
-                dataContainer.prepend(node)
-
-            }).catch(function (error) {
-                //dataContainer.append('<p>App Crash</p>')
-                console.log(error);
+                if(err.response.data == "dataError"){
+                    document.querySelector('#dataError').setAttribute('style', 'display:block')
+                }else if(err.response.data == "existed"){
+                    document.querySelector('#existedError').setAttribute('style', 'display: block')
+                }else{
+                    document.querySelector('#requestError').setAttribute('style', 'display: block')
+                }
+            })
         })
-
-        })
-        
-
+       
     </script>
 </body>
-
 </html>

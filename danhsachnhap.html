@@ -209,43 +209,43 @@
 
              <div class="col-md-12 col-lg-12">
                 <div class="card">
-                    <div class="card-header"style="font-weight:bold">DANH SÁCH XE</div>
+                    <div class="card-header" style="font-weight: bold">DANH SÁCH PHIẾU NHẬP VẬT TƯ PHỤ TÙNG</div>
                     <div class="card-body">
                         <p class="card-title"></p>
                         <div id="dataTables-example_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer"></div>
                         <div class="row">
                             <div class="col-sm-12 col-md-12"></div>
                             <div class="col-sm-12 col-md-12">
-                                <div id="dataTables-example_filter" class="dataTables_filter mb-2">
-                                    <label>
-                                        <input type="search" id="searchByLicense" name="license" class="form-control form-control-sm" placeholder="Biển số xe">
-                                    </label>
+                                <div class="col-sm-12 col-md-6">
+                                    <div id="dataTables-example_filter" class="dataTables_filter">
+                                        <label >Nhập tên vật tư phụ tùng:
+                                            <input type="search" id="searchByLicense" name="search" class="form-control form-control-sm" placeholder-aria-controls="dataTables-example">
+                                        </label>
+                                        <button id="searchbtn" type="submit" class="btn btn-primary mb-2"> Tìm</button>
+                                    </div>
                                 </div>
-                                <button id="searchbtn" type="submit" class="btn btn-primary mt-2"><i class="fas fa-save" ></i> Tìm</button>
                             </div>
                             <br>
                             <div id="totalCars" class="col-sm-12 col-md-12 margin-top-6"></div>
-                        </div>
-                        
+                        </div>  
 
-                        <div style="overflow-y: scroll; height: 600px;">
+                        <div style="overflow-y:scroll; height: 450px">
                             <table class="table table-hover" id="dataContainer" width="100%">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Biển số</th>
-                                        <th>Tiền nợ</th>
-                                        <th>Khách hàng</th>
-                                        <th>Hiệu xe</th>
-                                        <th>Phiếu thu tiền</th>
-                                        <th>Phiếu sữa chữa</th>
+                                        <th>Vật tư phụ tùng</th>
+                                        <th>Số lượng</th>
+                                        <th>Đơn giá</th>
+                                        <th>Tổng thành tiền</th>
+                                        <th>Thời gian nhập</th>
+                                        <th>Xóa</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 </tbody>
                             </table>
                         </div>
-                        
                     </div>
                 </div>
             </div>
@@ -263,17 +263,17 @@
         let searchBtn = document.getElementById('searchbtn')
         let totalDiv = document.getElementById('totalCars')
 
-        // Show car list
-        axios.get('http://localhost:3000/car')
+        // DANH SACH NHAP
+        axios.get('http://localhost:3000/importation')
         .then(function (response) {
          console.log(response.data);
             const total = response.data.Total
-            const carData = response.data.Cars
+            const importation = response.data.Importation
 
             totalDiv.setAttribute("style", "font-weight:bold")
             totalDiv.innerHTML = "Tổng cộng: " + total
 
-            carData.map((value , i)=> {
+            importation.map((value , i)=> {
                 const node = document.createElement("tr")
                 let dataNode = document.createElement("td")
                 let data = document.createTextNode(i+1)
@@ -281,52 +281,35 @@
                 node.append(dataNode)
                 
                 dataNode = document.createElement("td")
-                data = document.createTextNode(value.LicensePlate)
+                data = document.createTextNode(value.Detail[0].ACCESSORy.Name)
                 dataNode.appendChild(data)
                 node.append(dataNode)
 
                 dataNode = document.createElement("td")
-                data = document.createTextNode(value.Debt)
+                data = document.createTextNode(value.Detail[0].Quantity)
                 dataNode.appendChild(data)
                 node.append(dataNode)
 
                 dataNode = document.createElement("td")
-                data = document.createTextNode(value.CUSTOMER.Name)
+                data = document.createTextNode(value.Detail[0].UnitPrice)
                 dataNode.appendChild(data)
                 node.append(dataNode)
 
                 dataNode = document.createElement("td")
-                data = document.createTextNode(value.BRAND.Name)
+                data = document.createTextNode(value.Detail[0].Amount)
+                dataNode.appendChild(data)
+                node.append(dataNode)
+
+                dataNode = document.createElement("td")
+                data = document.createTextNode(value.Date)
                 dataNode.appendChild(data)
                 node.append(dataNode)
 
                 dataNode = document.createElement("td")
                 btnNode = document.createElement("button")
-                data = document.createTextNode("Tạo phiếu thu tiền ")
+                data = document.createTextNode("Xóa")
                 btnNode.append(data)
-                btnNode.setAttribute("class", "btn btn-success mb-2")
-                brNode = document.createElement("br")
-                dataNode.append(btnNode)
-                dataNode.append(brNode)
-                btnNode = document.createElement("button")
-                data = document.createTextNode("Xem phiếu thu tiền")
-                btnNode.append(data)
-                btnNode.setAttribute("class", "btn btn-primary")
-                dataNode.append(btnNode)
-                node.append(dataNode)
-
-                dataNode = document.createElement("td")
-                btnNode = document.createElement("button")
-                data = document.createTextNode("Tạo phiếu sữa chữa ")
-                btnNode.append(data)
-                btnNode.setAttribute("class", "btn btn-success mb-2")
-                brNode = document.createElement("br")
-                dataNode.append(btnNode)
-                dataNode.append(brNode)
-                btnNode = document.createElement("button")
-                data = document.createTextNode("Xem phiếu sữa chữa")
-                btnNode.append(data)
-                btnNode.setAttribute("class", "btn btn-primary")
+                btnNode.setAttribute("class", "btn btn-danger")
                 dataNode.append(btnNode)
                 node.append(dataNode)
 
@@ -336,89 +319,6 @@
         .catch(function (error) {
                 //dataContainer.append('<p>App Crash</p>')
                 console.log(error);
-        })
-        
-        // SEARCH CAR
-        searchBtn.addEventListener('click',function(e) {
-            
-            console.log(searchInput.value)
-            axios.post("http://localhost:3000/car/search",{
-                license: searchInput.value
-            })
-            .then(function(response){
-                let value = response.data
-
-                $('#dataContainer>tbody>tr').remove()
-                totalDiv.innerHTML = "Total: "
-
-                let node = document.createElement("tr")
-                let dataNode = document.createElement("td")
-                let data = document.createTextNode(" ")
-                dataContainer.prepend(node)
-
-                node = document.createElement("tr")
-                dataNode = document.createElement("td")
-                data = document.createTextNode(" ")
-                dataNode.appendChild(data)
-                node.append(dataNode)
-
-                dataNode = document.createElement("td")
-                data = document.createTextNode(value.LicensePlate)
-                dataNode.appendChild(data)
-                node.append(dataNode)
-
-                dataNode = document.createElement("td")
-                data = document.createTextNode(value.Debt)
-                dataNode.appendChild(data)
-                node.append(dataNode)
-
-                dataNode = document.createElement("td")
-                data = document.createTextNode(value.CUSTOMER.Name)
-                dataNode.appendChild(data)
-                node.append(dataNode)
-
-                dataNode = document.createElement("td")
-                data = document.createTextNode(value.BRAND.Name)
-                dataNode.appendChild(data)
-                node.append(dataNode)
-
-                dataNode = document.createElement("td")
-                btnNode = document.createElement("button")
-                data = document.createTextNode("Tạo phiếu thu tiền ")
-                btnNode.append(data)
-                btnNode.setAttribute("class", "btn btn-success")
-                brNode = document.createElement("br")
-                dataNode.append(btnNode)
-                dataNode.append(brNode)
-                btnNode = document.createElement("button")
-                data = document.createTextNode("Xem phiếu thu tiền")
-                btnNode.append(data)
-                btnNode.setAttribute("class", "btn btn-primary")
-                dataNode.append(btnNode)
-                node.append(dataNode)
-
-                dataNode = document.createElement("td")
-                btnNode = document.createElement("button")
-                data = document.createTextNode("Tạo phiếu sữa chữa ")
-                btnNode.append(data)
-                btnNode.setAttribute("class", "btn btn-success")
-                brNode = document.createElement("br")
-                dataNode.append(btnNode)
-                dataNode.append(brNode)
-                btnNode = document.createElement("button")
-                data = document.createTextNode("Xem phiếu sữa chữa")
-                btnNode.append(data)
-                btnNode.setAttribute("class", "btn btn-primary")
-                dataNode.append(btnNode)
-                node.append(dataNode)
-
-                dataContainer.prepend(node)
-
-            }).catch(function (error) {
-                //dataContainer.append('<p>App Crash</p>')
-                console.log(error);
-        })
-
         })
         
 
